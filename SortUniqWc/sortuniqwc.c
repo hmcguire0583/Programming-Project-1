@@ -26,8 +26,7 @@ exit(1); // program terminates unsuccesfully
 } 
 
 
-// NEXT PART I HAVEN'T STARTED:
-
+// Harry - I GOT UP TO THIS POINT - NEXT PART I HAVEN'T STARTED - WE CAN WORK ON IT
 
 
 
@@ -47,6 +46,7 @@ if (pid < 0) {
 // fork error 
 } 
 if (pid == 0) { // second child process, run uniq 
+
 // tie read end of fd1 to standard input (file descriptor 0) 
 // tie write end of fd2 to standard output (file descriptor 1) 
 // close write end of pipe fd1 
