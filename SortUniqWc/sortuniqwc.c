@@ -4,7 +4,7 @@ insert #include directives for all needed header files here  */
 #include <stdlib.h>
 #include <unistd.h>
 
-int main(int argc, char *arv[]) { 
+int main(int argc, char *argv[]) { 
 //create first pipe fd1 
 // fork first child 
 
@@ -15,8 +15,9 @@ if (pipe(fd1) < 0) { // initializing the pipe itself
 fprintf(stderr, "pipe error!\n"); 
 exit(1); 
 }
-       
-pid = fork();  // create first child for sort 
+
+pid_t pid;    // pid initialized   
+pid = fork(); // create first child for sort 
 
 if (pid < 0) { 
 // fork error 
@@ -54,7 +55,7 @@ if (pid == 0) { // second child process, run uniq
 // should not get here 
 } 
 // fork third child 
-pid = fork() // create third child for wc -l 
+pid = fork(); // create third child for wc -l 
 if (pid < 0) { 
 // fork error 
 } 
