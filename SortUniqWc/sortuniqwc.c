@@ -27,7 +27,7 @@ return 1; // program terminates unsuccesfully
 } 
 
 if (pid1 == 0) { // first child process, run sort 
-printf("The child process running sort is %d\n", getpid());     
+printf("The child process running sort is: %d\n", getpid());     
 // tie write end of pipe fd1 to standard output (file descriptor 1) 
 dup2(fd1[1], 1);
 // close read end of pipe fd1 
@@ -56,7 +56,7 @@ return 1; // program terminates unsuccesfully
 } 
 
 if (pid2 == 0) { // second child process, run uniq 
-printf("The child process running uniq is %d\n", getpid());     
+printf("The child process running uniq is: %d\n", getpid());     
 // tie read end of fd1 to standard input (file descriptor 0) 
 dup2(fd1[0], 0);
 // tie write end of fd2 to standard output (file descriptor 1) 
@@ -81,7 +81,7 @@ return 1; // program terminates unsuccesfully
 } 
 
 if (pid3 == 0) { // third child process, run wc -l 
-printf("The child process running wc -l is %d\n", getpid());     
+printf("The child process running wc -l is: %d\n", getpid());     
 // tie read end of fd2 to standard input (file descriptor 0) 
 dup2(fd2[0], 0);
 // close write end of pipe fd2 
