@@ -105,13 +105,11 @@ close(fd2[0]);
 close(fd2[1]);
 // not implied in outline but we have to wait for pid1 and pid2 to avoid zombies.
 waitpid(pid1, NULL, 0); 
-printf("First child process finished.\n"); 
+// printf("First child process finished.\n"); 
 waitpid(pid2, NULL, 0); 
-printf("Second child process finished.\n"); 
-
+// printf("Second child process finished.\n"); 
 // wait for third process to finish.
 waitpid(pid3, NULL, 0); 
-printf("Third child finished process.\n"); 
-printf("Done!\n");
+printf("Third and last child process finished.\n"); // print Third child process finished as specified from pdf.
 return 0;
 } 
