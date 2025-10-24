@@ -6,6 +6,7 @@ insert #include directives for all needed header files here  */
 #include <sys/types.h> 
 #include <sys/wait.h> 
 
+
 int main(int argc, char *argv[]) { 
 //create first pipe fd1 
 // fork first child 
@@ -17,16 +18,15 @@ fprintf(stderr, "pipe error!\n");
 return 1; 
 }
 
-pid_t pid;    // pid initialized   
-pid = fork(); // create first child for sort 
+pid_t pid1 = fork(); // create first child for sort 
 
-if (pid < 0) { 
+if (pid1 < 0) { 
 // fork error 
 fprintf(stderr, "forking error!\n");
 return 1; // program terminates unsuccesfully
 } 
 
-if (pid == 0) { // first child process, run sort 
+if (pid1 == 0) { // first child process, run sort 
 printf("The child process running sort is %d\n", getpid());     
 // tie write end of pipe fd1 to standard output (file descriptor 1) 
 dup2(fd1[1], 1);
@@ -48,13 +48,14 @@ return 1; // return
 }
 
 // fork second child 
-pid = fork(); // create second child for uniq 
-if (pid < 0) { 
+pid_t pid2 = fork(); // create second child for uniq 
+if (pid2 < 0) { 
 // fork error 
 fprintf(stderr, "forking error!\n");
 return 1; // program terminates unsuccesfully
 } 
-if (pid == 0) { // second child process, run uniq 
+
+if (pid2 == 0) { // second child process, run uniq 
 printf("The child process running uniq is %d\n", getpid());     
 // tie read end of fd1 to standard input (file descriptor 0) 
 dup2(fd1[0], 0);
@@ -72,14 +73,14 @@ exit(1); // exits after execlp failure
 } 
 
 // fork third child 
-pid = fork(); // create third child for wc -l 
-if (pid < 0) { 
+pid_t pid3 = fork(); // create third child for wc -l 
+if (pid3 < 0) { 
 // fork error 
 fprintf(stderr, "forking error!\n");
 return 1; // program terminates unsuccesfully
 } 
 
-if (pid == 0) { // third child process, run wc -l 
+if (pid3 == 0) { // third child process, run wc -l 
 printf("The child process running wc -l is %d\n", getpid());     
 // tie read end of fd2 to standard input (file descriptor 0) 
 dup2(fd2[0], 0);
@@ -96,8 +97,21 @@ printf("Should not be here after execlp to wc -l\n"); // error message for exelc
 exit(1); // exits after execlp failure
 } 
 // parent process code 
-
+printf("I am the parent process: %d\n", getpid());
 // close both ends of pipes fd1 and fd2 
+close(fd1[0]);
+close(fd1[1]);
+close(fd2[0]);
+close(fd2[1]);
+// not implied in outline but we have to wait for pid1 and pid2 to avoid zombies.
+waitpid(pid1, NULL, 0); 
+printf("First child process finished.\n"); 
+waitpid(pid2, NULL, 0); 
+printf("Second child process finished.\n"); 
 
-// wait for third process to end. 
+// wait for third process to finish.
+waitpid(pid3, NULL, 0); 
+printf("Third child finished process.\n"); 
+printf("Done!\n");
+return 0;
 } 
