@@ -6,7 +6,6 @@ insert #include directives for all needed header files here  */
 #include <sys/types.h> 
 #include <sys/wait.h> 
 
-
 int main(int argc, char *argv[]) { 
 //create first pipe fd1 
 // fork first child 
@@ -72,21 +71,33 @@ printf("Should not be here after execlp to uniq\n"); // error message for exelcp
 exit(1); // exits after execlp failure
 } 
 
-
 // fork third child 
 pid = fork(); // create third child for wc -l 
 if (pid < 0) { 
 // fork error 
+fprintf(stderr, "forking error!\n");
+return 1; // program terminates unsuccesfully
 } 
+
 if (pid == 0) { // third child process, run wc -l 
+printf("The child process running wc -l is %d\n", getpid());     
 // tie read end of fd2 to standard input (file descriptor 0) 
+dup2(fd2[0], 0);
 // close write end of pipe fd2 
+close(fd2[1]);
 // close read end of pipe fd1 
+close(fd1[0]);
 // close write end of pipe fd1 
+close(fd1[1]);
 // start the wc -l command using execlp 
+execlp("/usr/bin/wc", "wc", "-l", NULL);
 // should not get here 
+printf("Should not be here after execlp to wc -l\n"); // error message for exelcp failure
+exit(1); // exits after execlp failure
 } 
 // parent process code 
+
 // close both ends of pipes fd1 and fd2 
+
 // wait for third process to end. 
 } 
