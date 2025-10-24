@@ -3,6 +3,8 @@ insert #include directives for all needed header files here  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 
 int main(int argc, char *argv[]) { 
@@ -47,7 +49,6 @@ if (pid < 0) {
 // fork error 
 } 
 if (pid == 0) { // second child process, run uniq 
-
 // tie read end of fd1 to standard input (file descriptor 0) 
 // tie write end of fd2 to standard output (file descriptor 1) 
 // close write end of pipe fd1 
